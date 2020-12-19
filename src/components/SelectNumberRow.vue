@@ -1,8 +1,8 @@
 <template>
         <div class='v-select'>
-            <label>Показывать по: </label>
+            <label>{{$t('select.showBy')}}: </label>
             <select v-model="currenciesPerPage" @change="changeCurrenciesPerPage()">
-                <option value="" selected disabled hidden>Выбрать</option>
+                <option value="" selected disabled hidden>{{$t('select.select')}}</option>
                 <option>5</option>
                 <option>10</option>
                 <option>20</option>

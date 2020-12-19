@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-      <Table/>
+      <Table @set-locale="setLocale"/>
 
   </div>
 </template>
@@ -9,9 +9,13 @@
 import Table from './views/Table'
 
 export default {
-  name: 'App',
   components: {
       Table
+  },
+  methods: {
+    setLocale(locale) {
+      this.$i18n.locale = locale
+    }
   }
 }
 </script>

@@ -10,8 +10,12 @@
         </div>
          
         <div class='v-table__header'>
-            <p>Название</p>
-            <p>Символ</p>
+            <p>
+               {{$t('table.columnName')}}
+            </p>
+            <p>
+               {{$t('table.columnSymbol')}}
+            </p>
         </div>
 
         <div class='v-table__body' v-if="currencies.length">
@@ -27,10 +31,27 @@
         </div>
 
         <div v-else>
-            <h1>Загрузка...</h1>
+            <h1>
+                {{$t('table.loading')}}...
+            </h1>
         </div>
 
         <Pagination @page-click="pageClick" :pages='pages' :pageNumber='pageNumber'/>
+
+        <div class='flags'>
+            <button @click.prevent="setLocale('ru')">
+                <flag iso='ru'>
+                </flag>
+            </button>
+            <button @click.prevent="setLocale('en')">
+                <flag iso='us'>
+                </flag>
+            </button>
+            <button @click.prevent="setLocale('fr')">
+                <flag iso='fr'>
+                </flag>
+            </button>
+        </div>
     </div>
 </template>
 
@@ -41,43 +62,43 @@ import SelectNumberRow from '../components/SelectNumberRow'
 import Pagination from '../components/Pagination'
 
 export default {
-  components: {
-      SelectNumberRow, Search, Pagination 
-  },
-  data() {
-    return {
-        timer: '',
-        currenciesPerPage: 10,
-        pageNumber: 1,
-        filteredValue: ''
-    }
-  },
-  computed: {
-    ...mapGetters([
-        'currencies'
-    ]),
-    pages() {
-        return Math.ceil(this.filteredList.length / this.currenciesPerPage)
+    components: {
+        SelectNumberRow, Search, Pagination 
     },
-    paginatedCurrencies() {
-        let from = (this.pageNumber - 1) * this.currenciesPerPage
-        let to = Number(from) + Number(this.currenciesPerPage)
+    data() {
+        return {
+            timer: '',
+            currenciesPerPage: 10,
+            pageNumber: 1,
+            filteredValue: ''
+        }
+    },
+    computed: {
+        ...mapGetters([
+            'currencies'
+        ]),
+        pages() {
+            return Math.ceil(this.filteredList.length / this.currenciesPerPage)
+        },
+        paginatedCurrencies() {
+            let from = (this.pageNumber - 1) * this.currenciesPerPage
+            let to = Number(from) + Number(this.currenciesPerPage)
 
-        return this.filteredList.slice(from, to)
-    },
-    filteredList() {
-        const emptyMessage = [{   
-                name: "Валюта не найдена",
-                symbol: ''
-            }
-        ]
-        const filteredList = this.currencies.filter(curr => {
-            return curr.name.toLowerCase().includes(this.filteredValue.toLowerCase()) 
-        })
- 
-        return filteredList.length ? filteredList : emptyMessage
-    } 
-    },
+            return this.filteredList.slice(from, to)
+        },
+        filteredList() {
+            const emptyMessage = [{   
+                    name: "Валюта не найдена",
+                    symbol: ''
+                }
+            ]
+            const filteredList = this.currencies.filter(curr => {
+                return curr.name.toLowerCase().includes(this.filteredValue.toLowerCase()) 
+            })
+    
+            return filteredList.length ? filteredList : emptyMessage
+        } 
+        },
   methods: {
     ...mapActions([
         'getCurrenciesFromApi'
@@ -97,15 +118,18 @@ export default {
     },
     clearFilteredValue() {
         this.filteredValue = ''
+    },
+    setLocale(locale) {
+        this.$emit('set-locale', locale)
     }
     },
-    created() {
+    mounted() {
         this.getCurrenciesFromApi()
-        this.timer = setInterval(this.getCurrenciesFromApi, 60000)
+        this.timer = setInterval(this.getCurrenciesFromApi, 6000)
     },
     beforeDestroy () {
         clearInterval(this.timer)
-    }    
+    },   
 }
 </script>
 
@@ -148,6 +172,18 @@ export default {
 }
 .v-table__body .row__child:nth-child(4){
     background: #1b453f;
+}
+.flags {
+    display: flex;
+    justify-content: center;
+}
+.flags button{
+    margin-right: 10px;
+    border: .5px solid #999999;
+    border-radius: 10%;
+    outline: none;
+    cursor: pointer;
+    background: white;
 }
 @media only screen and (max-width: 576px) {
   .v-table__input-select{

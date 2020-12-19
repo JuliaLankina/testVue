@@ -4,7 +4,7 @@
             <input 
                 type="text" 
                 v-model='searchString' 
-                placeholder="Например: Stellar" 
+                :placeholder="$t('search.placeholder') + ': Stellar'" 
                 required>
             <strong @click="clearField" class="clear-small-btn">&times;</strong>
         </div>
@@ -12,14 +12,14 @@
             class="primary-btn" 
             @click.prevent='searchName'
         >
-        &#8981; Найти
+        &#8981; {{$t('search.search')}}
         </button>
         <button 
             @click.prevent='clearFilteredValue' 
             v-if="this.filteredValue"
             class="primary-btn clear-btn"
         >
-        Сброс
+        {{$t('search.clear')}}
         </button>
     </div>
 </template>
@@ -93,5 +93,6 @@ export default {
 .clear-btn {
     margin-left: 5px;
     background-color: #838481;
+    cursor: pointer;
 }
 </style>
