@@ -1,5 +1,19 @@
 <template>
     <div class='v-table'>
+        <div class='i18n'>
+            <button @click.prevent="setLocale('ru')">
+                <flag iso='ru'>
+                </flag>
+            </button>
+            <button @click.prevent="setLocale('en')">
+                <flag iso='us'>
+                </flag>
+            </button>
+            <button @click.prevent="setLocale('fr')">
+                <flag iso='fr'>
+                </flag>
+            </button>
+        </div>
         <div class='v-table__input-select'>
             <Search 
                 @search="searchRow" 
@@ -24,8 +38,12 @@
                 :key="row.id"
             >       
                 <div class="row__child">
-                    <div class="row row__name">{{row.name}}</div>
-                    <div class="row row__symbol">{{row.symbol.toUpperCase()}}</div>
+                    <div class="row row__name">
+                        {{row.name}}
+                    </div>
+                    <div class="row row__symbol">
+                        {{row.symbol.toUpperCase()}}
+                    </div>
                 </div>
             </div>
         </div>
@@ -35,23 +53,11 @@
                 {{$t('table.loading')}}...
             </h1>
         </div>
-
-        <Pagination @page-click="pageClick" :pages='pages' :pageNumber='pageNumber'/>
-
-        <div class='flags'>
-            <button @click.prevent="setLocale('ru')">
-                <flag iso='ru'>
-                </flag>
-            </button>
-            <button @click.prevent="setLocale('en')">
-                <flag iso='us'>
-                </flag>
-            </button>
-            <button @click.prevent="setLocale('fr')">
-                <flag iso='fr'>
-                </flag>
-            </button>
-        </div>
+        <Pagination 
+            @page-click="pageClick" 
+            :pages='pages' 
+            :pageNumber='pageNumber'
+        />
     </div>
 </template>
 
@@ -173,14 +179,15 @@ export default {
 .v-table__body .row__child:nth-child(4){
     background: #1b453f;
 }
-.flags {
+.i18n {
     display: flex;
     justify-content: center;
+    margin-bottom: 10px;
 }
-.flags button{
-    margin-right: 10px;
+.i18n button{
+    margin-right: 15px;
     border: .5px solid #999999;
-    border-radius: 10%;
+    border-radius: 15%;
     outline: none;
     cursor: pointer;
     background: white;
