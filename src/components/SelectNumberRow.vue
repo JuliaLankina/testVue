@@ -41,6 +41,7 @@ export default {
 }
 .v-select select{
     outline: none;
+    cursor: pointer;
 }
 
 </style>

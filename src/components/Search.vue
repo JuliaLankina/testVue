@@ -89,6 +89,7 @@ export default {
     text-align: center;
     text-decoration: none;
     font-size: 13px;
+    cursor: pointer;
 }
 .clear-btn {
     margin-left: 5px;

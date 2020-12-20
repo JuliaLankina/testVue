@@ -142,6 +142,7 @@ export default {
 <style>
 .v-table{
     max-width: 900px;
+    min-width: 400px;
     margin: 0 auto;  
 }
 .v-table__input-select{
@@ -172,19 +173,17 @@ export default {
     border-bottom: .5px solid #f0f0f0;
 }
 
-.v-table__body{
+.v-table__body {
     height: 650px;
     overflow: auto;
 }
-.v-table__body .row__child:nth-child(4){
-    background: #1b453f;
-}
+
 .i18n {
     display: flex;
     justify-content: center;
     margin-bottom: 10px;
 }
-.i18n button{
+.i18n button {
     margin-right: 15px;
     border: .5px solid #999999;
     border-radius: 15%;
@@ -193,7 +192,7 @@ export default {
     background: white;
 }
 @media only screen and (max-width: 576px) {
-  .v-table__input-select{
+  .v-table__input-select {
     flex-direction: column;
     height: 70px;
     justify-content: space-between;
