@@ -170,7 +170,7 @@ export default {
     flex-basis: 50%;
     padding: 8px 16px;
     text-align: left;
-    border-bottom: 1px solid #f0f0f0;
+    border-bottom: .5px solid #f0f0f0;
 }
 
 .v-table__body {
