@@ -1,13 +1,17 @@
 <template>
         <div class='v-select'>
-            <label>{{$t('select.showBy')}}: </label>
-            <select v-model="currenciesPerPage" @change="changeCurrenciesPerPage()">
-                <option value="" selected disabled hidden>{{$t('select.select')}}</option>
-                <option>5</option>
-                <option>10</option>
-                <option>20</option>
-                <option>50</option>
-                <option>100</option>
+            <label>
+                <slot></slot>
+            </label>
+            <select 
+                v-model="currenciesPerPage" 
+            >
+                <option 
+                    v-for="(option, i) in options" 
+                    :key="`${option}` + i"
+                >
+                    {{option}}
+                </option>
             </select>
         </div>  
 </template>
@@ -16,16 +20,22 @@
 export default {
     data() {
         return {
-            currenciesPerPage: ''
+            currenciesPerPage: '10',
+            options: {
+                '5': 5,
+                '10': 10,
+                '20': 20,
+                '50': 50,
+                '100': 100,
+            }
         }
     },
-    methods: {
-        changeCurrenciesPerPage() {
+    watch: {
+        currenciesPerPage() {
             this.$emit('changePerPage', this.currenciesPerPage)
         }
     }   
-}
-  
+} 
 </script>
 
 <style scoped>
@@ -43,5 +53,7 @@ export default {
     outline: none;
     cursor: pointer;
 }
-
+.v-select label {
+    margin-right: 5px;
+}
 </style>

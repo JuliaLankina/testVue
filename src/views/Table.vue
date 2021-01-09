@@ -1,26 +1,17 @@
 <template>
     <div class='v-table'>
-        <div class='i18n'>
-            <button @click.prevent="setLocale('ru')">
-                <flag iso='ru'>
-                </flag>
-            </button>
-            <button @click.prevent="setLocale('en')">
-                <flag iso='us'>
-                </flag>
-            </button>
-            <button @click.prevent="setLocale('fr')">
-                <flag iso='fr'>
-                </flag>
-            </button>
-        </div>
-        <div class='v-table__input-select'>
+        <div class='v-table__input-select'>   
             <Search 
                 @search="searchRow" 
-                :filteredValue='filteredValue' 
+                :filteredValue="filteredValue"
+                :placeholderForSearch="placeholderForSearch()"
                 @clear-filtered-value="clearFilteredValue"
             />
-            <SelectNumberRow @changePerPage='changePerPage'/>
+            <SelectNumberRow 
+                @changePerPage='changePerPage'
+            >
+                {{$t('select.showBy')}}:
+            </SelectNumberRow>
         </div>
          
         <div class='v-table__header'>
@@ -32,26 +23,36 @@
             </p>
         </div>
 
-        <div class='v-table__body' v-if="currencies.length">
-            <div class='v_table__row'
-                v-for="row in paginatedCurrencies"
-                :key="row.id"
-            >       
+        <div 
+            class='v-table__body' 
+            v-if="currencies.length"
+        >
+            <router-link
+                class='v_table__row'
+                v-for="(row, i) in paginatedCurrencies"
+                :key="`${row.name} - ${i}`"
+                :to="{name: `currens`, params: {id: row.symbol}}" 
+            >   
                 <div class="row__child">
-                    <div class="row row__name">
+                    <div class="row">
+                    <img 
+                        v-if="setImgUrl(row.name)"
+                        :src="setImgUrl(row.name)"
+                        :alt="row.name"
+                    >
                         {{row.name}}
                     </div>
-                    <div class="row row__symbol">
+                    <div class="row">
                         {{row.symbol.toUpperCase()}}
                     </div>
                 </div>
-            </div>
+            </router-link>
         </div>
-
         <div v-else>
-            <h1>
+            <h3>
                 {{$t('table.loading')}}...
-            </h1>
+            </h3>
+            <Loader/>
         </div>
         <Pagination 
             @page-click="pageClick" 
@@ -63,20 +64,28 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
-import Search from '../components/Search'
-import SelectNumberRow from '../components/SelectNumberRow'
-import Pagination from '../components/Pagination'
+import { urlMixin } from '@/mixins'
+import Search from '@/components/Search'
+import SelectNumberRow from '@/components/SelectNumberRow'
+import Pagination from '@/components/Pagination'
+import Loader from '@/components/Loader'
 
 export default {
     components: {
-        SelectNumberRow, Search, Pagination 
+        SelectNumberRow, 
+        Search, 
+        Pagination, 
+        Loader
     },
+    mixins: [
+        urlMixin
+    ],
     data() {
         return {
             timer: '',
             currenciesPerPage: 10,
             pageNumber: 1,
-            filteredValue: ''
+            filteredValue: '',
         }
     },
     computed: {
@@ -94,44 +103,46 @@ export default {
         },
         filteredList() {
             const emptyMessage = [{   
-                    name: "Валюта не найдена",
+                    name: this.$t('table.emptyMessage'),
                     symbol: ''
                 }
             ]
             const filteredList = this.currencies.filter(curr => {
-                return curr.name.toLowerCase().includes(this.filteredValue.toLowerCase()) 
+                return curr.name.toLowerCase().startsWith(this.filteredValue.toLowerCase()) 
             })
     
             return filteredList.length ? filteredList : emptyMessage
-        } 
         },
-  methods: {
-    ...mapActions([
-        'getCurrenciesFromApi'
-    ]),
-    cancelAutoUpdate() { 
-        clearInterval(this.timer)
     },
-    pageClick(page) {
-        this.pageNumber = page
-    },
-    changePerPage(value) {
-        this.currenciesPerPage = value
-        this.pageNumber = 1
-    },
-    searchRow(value) {
-        this.filteredValue = value
-    },
-    clearFilteredValue() {
-        this.filteredValue = ''
-    },
-    setLocale(locale) {
-        this.$emit('set-locale', locale)
-    }
+    methods: {
+        ...mapActions([
+            'getCurrenciesFromApi'
+        ]),
+        cancelAutoUpdate() { 
+            clearInterval(this.timer)
+        },
+        pageClick(page) {
+            this.pageNumber = page
+        },
+        changePerPage(value) {
+            this.currenciesPerPage = value
+            this.pageNumber = 1
+        },
+        searchRow(value) {
+            this.filteredValue = value
+        },
+        clearFilteredValue() {
+            this.filteredValue = ''
+        },
+        placeholderForSearch() {
+            if (this.currencies) {
+                return this.currencies[1].name
+            }           
+        },
     },
     mounted() {
         this.getCurrenciesFromApi()
-        this.timer = setInterval(this.getCurrenciesFromApi, 6000)
+        this.timer = setInterval(this.getCurrenciesFromApi, 60000)
     },
     beforeDestroy () {
         clearInterval(this.timer)
@@ -141,6 +152,7 @@ export default {
 
 <style>
 .v-table{
+    margin-top: 30px;
     max-width: 900px;
     min-width: 400px;
     margin: 0 auto;  
@@ -166,30 +178,29 @@ export default {
     justify-content: space-around;
     background: #ffffff;
 }
+.row__child:hover{
+    background-color: #ccc
+}
+
 .row{
     flex-basis: 50%;
     padding: 8px 16px;
     text-align: left;
     border-bottom: .5px solid #f0f0f0;
+    display: flex;
+    align-items: center;
 }
-
+.row img {
+    width: 15px;
+    margin-right: 6px;
+}
 .v-table__body {
     height: 650px;
     overflow: auto;
 }
-
-.i18n {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 10px;
-}
-.i18n button {
-    margin-right: 15px;
-    border: .5px solid #999999;
-    border-radius: 15%;
-    outline: none;
-    cursor: pointer;
-    background: white;
+.v_table__row {
+    text-decoration: none;
+    color: #000;
 }
 @media only screen and (max-width: 576px) {
   .v-table__input-select {
@@ -197,5 +208,6 @@ export default {
     height: 70px;
     justify-content: space-between;
     }
-}       
+}
+       
 </style>

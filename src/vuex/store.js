@@ -30,6 +30,9 @@ const store = new Vuex.Store({
     getters: {
         currencies(state) {
             return state.currencies;
+        },
+        getOneCurrens: state => currensId => {
+            return state.currencies.find(curr => curr.symbol === currensId)
         }
     }
 })

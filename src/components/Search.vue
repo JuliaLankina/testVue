@@ -1,25 +1,30 @@
 <template>
     <div class="v-input">
-        <div class="clearable">
+        <div class="clearable"> 
             <input 
                 type="text" 
-                v-model='searchString' 
-                :placeholder="$t('search.placeholder') + ': Stellar'" 
+                v-model='searchString'
+                :placeholder="$t('search.placeholder') + `: ${placeholderForSearch}`" 
                 required>
-            <strong @click="clearField" class="clear-small-btn">&times;</strong>
+            <strong 
+                @click="clearField"
+                :class="[clearSmallBtn, searchString.length === 0 ? '' : isActive]"
+            >
+                &times;
+            </strong>
         </div>
         <button 
-            class="primary-btn" 
             @click.prevent='searchName'
+            :class="[primaryBtn, searchString.length === 0 ? '' : isActiveSearch]"
         >
-        &#8981; {{$t('search.search')}}
+            &#8981; {{$t('search.search')}}
         </button>
         <button 
             @click.prevent='clearFilteredValue' 
             v-if="this.filteredValue"
             class="primary-btn clear-btn"
         >
-        {{$t('search.clear')}}
+            {{$t('search.clear')}}
         </button>
     </div>
 </template>
@@ -27,13 +32,11 @@
 <script>
 export default {
     props:
-        ['filteredValue'],    
+        ['filteredValue', 'placeholderForSearch'],    
     methods: {
         searchName() {
             if (this.searchString.trim()) {
-                const value = this.searchString
-
-                this.$emit('search', value)
+                this.$emit('search', this.searchString)
             }    
         },
         clearField() {
@@ -48,7 +51,11 @@ export default {
     },
     data() {
         return {
-            searchString: ''
+            searchString: '',
+            clearSmallBtn: 'clear-small-btn',
+            isActive: 'is-active',
+            primaryBtn: 'primary-btn',
+            isActiveSearch: 'is-active-search'
         }
     }
     }
@@ -76,24 +83,37 @@ export default {
     top: 5px;
     padding: 0 8px;
     font-size: 18px;
-    cursor: pointer;
+    cursor: not-allowed;
+    color: #c7c7c7;
 }
+
 .clearable input:focus, button:focus {
     outline: none;
 }
 .primary-btn  {
-    background-color: #4CAF50;
+    background-color: #bfbfbf;
     border: none;
     color: white;
     padding: 5px 10px;
     text-align: center;
     text-decoration: none;
     font-size: 13px;
-    cursor: pointer;
+    cursor: not-allowed;
 }
 .clear-btn {
     margin-left: 5px;
     background-color: #838481;
     cursor: pointer;
+    pointer-events: auto;
+}
+.is-active {
+    color: #000000;
+    cursor: pointer;
+    pointer-events: auto;
+}
+.is-active-search {
+    background-color: #5acc58;
+    cursor: pointer;
+    pointer-events: auto;
 }
 </style>

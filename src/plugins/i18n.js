@@ -4,14 +4,16 @@ import VueI18n from 'vue-i18n'
 Vue.use(VueI18n)
 
 export const i18n = new VueI18n({
-    locale: 'en',
+    locale: 'us',
     fallbackLocale: 'ru',
     messages: {
-        en: {
+        us: {
             table: {
                 columnName: 'Name',
                 columnSymbol: 'Symbol',
-                loading: 'Loading'
+                loading: 'Loading',
+                emptyMessage: 'Currency not found',
+                site: 'Website'
 
             },
             search: {
@@ -22,14 +24,15 @@ export const i18n = new VueI18n({
             },
             select: {
                 showBy: 'Show by',
-                select: 'Select'
             }
         },
         ru: {
             table: {
                 columnName: 'Имя',
                 columnSymbol: 'Символ',
-                loading: 'Загрузка'
+                loading: 'Загрузка',
+                emptyMessage: 'Валюта не найдена',
+                site: 'Веб-сайт'
 
             },
             search: {
@@ -40,14 +43,15 @@ export const i18n = new VueI18n({
             },
             select: {
                 showBy: 'Показывать по',
-                select: 'Выбрать'
             }
         },
         fr: {
             table: {
                 columnName: 'Nom',
                 columnSymbol: 'Symbole',
-                loading: 'Le chargement'
+                loading: 'Le chargement',
+                emptyMessage: 'Devise introuvable',
+                site: 'Le site Web'
 
             },
             search: {
@@ -58,7 +62,6 @@ export const i18n = new VueI18n({
             },
             select: {
                 showBy: 'Présenter par',
-                select: 'Sélectionner'
             }
         }
     }
